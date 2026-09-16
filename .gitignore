@@ -21,5 +21,11 @@ desktop.ini
 # 开发期的临时截图，正式截图在 assets/
 qa_*.png
 
+# PyInstaller 打包产物（exe 有十几 MB，按 README 的说明自行打包即可）
+build/
+dist/
+*.spec
+*.exe
+
 # 早期按“单格箭头”规格做的另一份精简实现，不属于本次提交
 homework2/

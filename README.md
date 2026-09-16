@@ -84,6 +84,23 @@ python arrow_game.py --smoke-test
 
 正常时逐关打印箭头数量和可解性，最后输出一行“自检通过”，进程返回 0。
 
+### 5. 打包成可执行文件（可选）
+
+不想装 Python 的电脑可以用 PyInstaller 打包成一个独立的 exe：
+
+```powershell
+python -m pip install pyinstaller
+python -m PyInstaller --onefile --windowed --name ArrowArrow arrow_game.py
+```
+
+产物在 `dist\ArrowArrow.exe`，双击即可运行（想换个名字直接重命名就行）。目标电脑
+**不需要安装 Python 或 pygame**。
+
+`--windowed` 表示不带控制台黑框；程序里已经对“没有控制台时 `sys.stdout` 为 `None`”
+的情况做了兜底，所以打包成窗口程序不会刚启动就闪退。
+
+打包产物（`build/`、`dist/`、`*.spec`、`*.exe`）都写在 `.gitignore` 里，不会进仓库。
+
 ## 五、游戏操作说明
 
 全部操作只需鼠标左键，另有一个键盘快捷键。

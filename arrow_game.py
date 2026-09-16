@@ -653,7 +653,9 @@ class ArrowPuzzle:
         return (int(math.copysign(1, next_cell[0] - current[0])) if next_cell[0] != current[0] else 0, int(math.copysign(1, next_cell[1] - current[1])) if next_cell[1] != current[1] else 0)
 
     def shoot(self, arrow: Arrow):
-        if not self.game or arrow.moving or self.game.busy or self.game.complete:
+        # dead / complete 之后 update_game 不再推进动画，所以这里必须拒绝点击，
+        # 否则箭头会卡在“飞行中”，棋盘永久无法再操作。
+        if not self.game or arrow.moving or self.game.busy or self.game.complete or self.game.dead:
             return
         if not can_arrow_leave(self.game.arrows, arrow, self.game.cols, self.game.rows):
             info = get_block_info(self.game.arrows, arrow, self.game.cols, self.game.rows)

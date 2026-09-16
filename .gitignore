@@ -1,0 +1,25 @@
+# Python 运行痕迹
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# 虚拟环境（按 README 重新创建即可）
+.venv/
+venv/
+env/
+
+# 游戏运行期写入的得分记录
+score_history.json
+
+# 编辑器 / 系统文件
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+desktop.ini
+
+# 开发期的临时截图，正式截图在 assets/
+qa_*.png
+
+# 早期按“单格箭头”规格做的另一份精简实现，不属于本次提交
+homework2/

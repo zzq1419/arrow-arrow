@@ -544,11 +544,12 @@ class ArrowPuzzleFlowTests(unittest.TestCase):
         self.assertIsNone(self.app.modal)
 
     def test_dark_mode_toggle_and_toast(self):
-        self.start_level(1)
+        game = self.start_level(1)
         before = self.app.dark_mode
         self.click_design((156, 76))  # 日间/夜间开关
         self.assertNotEqual(self.app.dark_mode, before)
         self.assertTrue(self.app.toast_text)
+        self.assertIs(self.app.game, game)  # 开关热区不应误触“重玩”
 
     def test_hint_button_highlights_a_playable_arrow(self):
         game = self.start_level(1)
@@ -588,11 +589,26 @@ class ArrowPuzzleFlowTests(unittest.TestCase):
         self.app.zoom_from_x(9999)
         self.assertAlmostEqual(self.app.zoom, ag.MAX_ZOOM)
 
-    def test_menu_button_opens_the_menu_modal(self):
-        game = self.start_level(1)
-        self.click_design((531, 75))  # “•••”
-        self.assertEqual(self.app.modal, "menu")
-        self.assertIn(str(len(game.arrows)), self.app.modal_copy)
+    def test_three_dot_menu_button_has_been_removed(self):
+        """三个点的菜单按钮已下线，原位置再点击不应弹出任何弹窗。"""
+        self.start_level(1)
+        self.assertIsNone(self.app.modal)
+        self.click_design((531, 75))  # 原来是 “•••” 的位置
+        self.assertIsNone(self.app.modal)
+
+    def test_top_right_restart_button_restores_the_level(self):
+        """“重玩”已挪到顶栏右上角，点击后关卡回到初始状态。"""
+        game = self.start_level(2)
+        original = len(game.arrows)
+        dark_before = self.app.dark_mode
+        self.click_arrow(self.current_free()[0])
+        self.finish_animation()
+        self.assertLess(len(game.arrows), original)
+        self.click_design((528, 66))  # 右上角 “重玩”
+        self.assertIsNot(self.app.game, game)
+        self.assertEqual(len(self.app.game.arrows), original)
+        self.assertEqual(self.app.game.lives, 3)
+        self.assertEqual(self.app.dark_mode, dark_before)  # 不应误触日夜开关
 
     def test_board_metrics_fit_inside_the_canvas(self):
         self.start_level(5)
@@ -827,7 +843,7 @@ class ArrowPuzzleFlowTests(unittest.TestCase):
         self.assertEqual(game.lives, 2)
         self.assertLess(len(game.arrows), len(original))
 
-        self.click_design((245, 69))  # “重玩”按钮
+        self.click_design((528, 66))  # 右上角 “重玩”按钮
         restarted = self.app.game
         self.assertIsNot(game, restarted)
         self.assertEqual(restarted.lives, 3)

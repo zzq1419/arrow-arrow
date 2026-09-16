@@ -828,10 +828,11 @@ class ArrowPuzzle:
         self.draw_toggle()
         assert self.game
         time_color = "#ffffff" if self.dark_mode else "#344858"
-        self.text(self.design, f"关卡{self.game.level_number}", 27, "#ffffff" if self.dark_mode else "#344858", (DESIGN_W / 2, 44), bold=True)
+        # 标题居中会和“重玩”按钮重叠，放在“重玩”和计时之间的空档里。
+        self.text(self.design, f"关卡{self.game.level_number}", 27, "#ffffff" if self.dark_mode else "#344858", (338, 69), bold=True)
         restart_rect = pygame.Rect(211, 48, 68, 42)
         self.rounded_button(self.design, restart_rect, "#3e4a6b" if self.dark_mode else "#fffdf9", "重玩", text_color="#ffffff" if self.dark_mode else "#3c5965", border="#4cdbc1" if self.dark_mode else "#73c8bf", radius=16, size=14)
-        self.text(self.design, f"剩余 {len(self.game.arrows)}", 14, time_color, (214, 93), bold=True)
+        self.text(self.design, f"剩余 {len(self.game.arrows)}", 14, time_color, (232, 93), bold=True)
         for index in range(3):
             self.draw_heart(self.design, (round(DESIGN_W / 2 - 25 + index * 25), 92), "#fa5b5f" if index < self.game.lives else "#67708a")
         self.draw_clock(self.design, (408, 76), time_color)

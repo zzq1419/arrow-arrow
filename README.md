@@ -139,7 +139,7 @@ arrow-arrow-clone-python/
 ├── arrow_game.py            # 全部游戏代码（规则 + 关卡生成 + 界面）
 ├── tests/
 │   └── test_arrow_game.py   # 69 项自动化测试
-├── assets/                  # README 和博客用的界面截图
+├── assets/                  # 界面截图与演示动图（README / 博客用）
 ├── requirements.txt         # 依赖清单（pygame==2.6.1）
 ├── run_python_game.bat      # Windows 双击启动器
 ├── BLOG.md                  # 作业博客正文（AIGC 使用记录、测试结果、PSP）
@@ -158,7 +158,7 @@ arrow-arrow-clone-python/
 
 ## 九、关于 AIGC
 
-本项目在开发过程中使用了 AIGC 编程工具辅助（需求拆解、代码骨架、界面排错、
+本项目在开发过程中使用 **Codex** 辅助（需求拆解、代码骨架、界面排错、
 关卡的自动校验思路、测试用例设计）。详细的协作记录、AI 做了什么、我做了哪些
 修改，见 [BLOG.md](BLOG.md) 第四节「AIGC 使用过程」。
 

@@ -828,18 +828,16 @@ class ArrowPuzzle:
         self.draw_toggle()
         assert self.game
         time_color = "#ffffff" if self.dark_mode else "#344858"
-        # 标题居中会和“重玩”按钮重叠，放在“重玩”和计时之间的空档里。
-        self.text(self.design, f"关卡{self.game.level_number}", 27, "#ffffff" if self.dark_mode else "#344858", (338, 69), bold=True)
-        restart_rect = pygame.Rect(211, 48, 68, 42)
-        self.rounded_button(self.design, restart_rect, "#3e4a6b" if self.dark_mode else "#fffdf9", "重玩", text_color="#ffffff" if self.dark_mode else "#3c5965", border="#4cdbc1" if self.dark_mode else "#73c8bf", radius=16, size=14)
-        self.text(self.design, f"剩余 {len(self.game.arrows)}", 14, time_color, (232, 93), bold=True)
+        # 顶栏排布：左侧齿轮与日夜开关，中间关卡标题与倒计时，
+        # 右上角竖排“重玩 / 剩余 N”。三个点的菜单按钮已移除。
+        self.text(self.design, f"关卡{self.game.level_number}", 26, time_color, (296, 66), bold=True)
+        self.draw_clock(self.design, (400, 66), time_color)
+        self.text(self.design, format_duration(self.game.seconds_left), 20, time_color, (443, 66), bold=True)
+        restart_rect = pygame.Rect(486, 46, 84, 40)
+        self.rounded_button(self.design, restart_rect, "#3e4a6b" if self.dark_mode else "#fffdf9", "重玩", text_color="#ffffff" if self.dark_mode else "#3c5965", border="#4cdbc1" if self.dark_mode else "#73c8bf", radius=16, size=15)
+        self.text(self.design, f"剩余 {len(self.game.arrows)}", 15, time_color, (528, 104), bold=True)
         for index in range(3):
-            self.draw_heart(self.design, (round(DESIGN_W / 2 - 25 + index * 25), 92), "#fa5b5f" if index < self.game.lives else "#67708a")
-        self.draw_clock(self.design, (408, 76), time_color)
-        self.text(self.design, format_duration(self.game.seconds_left), 22, time_color, (453, 76), bold=True)
-        menu = pygame.Rect(492, 48, 78, 54)
-        pygame.draw.rect(self.design, rgb("#2e3654" if self.dark_mode else "#8dbcc0"), menu, border_radius=28)
-        self.text(self.design, "•••", 27, "#ffffff", menu.center, bold=True)
+            self.draw_heart(self.design, (round(DESIGN_W / 2 - 25 + index * 25), 104), "#fa5b5f" if index < self.game.lives else "#67708a")
         board = self.draw_board_surface()
         rect = self.board_screen_rect()
         scaled = pygame.transform.smoothscale(board, (rect.width, rect.height))
@@ -873,7 +871,7 @@ class ArrowPuzzle:
         pygame.draw.rect(self.design, rgba("#112957", 55), card.move(0, 10), width=5, border_radius=28)
         self.rounded_button(self.design, pygame.Rect(card.right - 55, card.top + 10, 40, 40), "#fffdf9", "×", text_color="#778096", radius=18, size=28, bold=False)
         self.rounded_button(self.design, pygame.Rect(card.centerx - 72, card.top + 28, 144, 30), "#dcf4f3", "一箭又一箭", text_color="#2c9c9e", radius=15, size=14)
-        titles = {"settings": "设置", "level-selection": "选择关卡", "failure": "挑战失败", "success": "通关成功！", "history": "历史得分", "menu": "关卡菜单", "generic": "时间到啦"}
+        titles = {"settings": "设置", "level-selection": "选择关卡", "failure": "挑战失败", "success": "通关成功！", "history": "历史得分", "generic": "时间到啦"}
         self.text(self.design, titles.get(self.modal, "提示"), 27, "#3d4050", (card.centerx, card.top + 102), bold=True)
         if self.modal == "history":
             self.text(self.design, self.modal_copy, 15, "#667083", (card.centerx, card.top + 135))
@@ -1005,11 +1003,8 @@ class ArrowPuzzle:
             self.dark_mode = not self.dark_mode
             self.set_toast("夜间模式" if self.dark_mode else "明亮模式")
             return
-        if self.rect_contains((211, 48, 68, 42), position):
+        if self.rect_contains((486, 46, 84, 40), position):
             self.start_game()
-            return
-        if self.rect_contains((492, 48, 78, 54), position):
-            self.show_modal("menu", f"当前还剩 {len(self.game.arrows)} 支箭头。")
             return
         toolbar_y = DESIGN_H - 97
         if position[1] >= toolbar_y:

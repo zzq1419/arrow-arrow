@@ -19,6 +19,17 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterable
 
+# 用 PyInstaller 的 --windowed 打包成 exe 时没有控制台，sys.stdout / sys.stderr
+# 会是 None，此时任何 print（包括 pygame 导入时打印的欢迎横幅）都会抛异常，
+# 让程序刚启动就直接退出。这里把它们兜到空设备上，无控制台的 exe 才能正常跑。
+if sys.stdout is None:
+    sys.stdout = open(os.devnull, "w", encoding="utf-8")
+if sys.stderr is None:
+    sys.stderr = open(os.devnull, "w", encoding="utf-8")
+
+# 顺便关掉 pygame 的启动横幅，命令行输出更干净
+os.environ.setdefault("PYGAME_HIDE_SUPPORT_PROMPT", "1")
+
 import pygame
 
 

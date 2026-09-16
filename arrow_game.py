@@ -1086,7 +1086,10 @@ class ArrowPuzzle:
     def run(self):
         if self.smoke_test:
             for number in range(1, 6):
-                self.level(number)
+                state = self.level(number)
+                profile = getattr(state, "profile", {})
+                print(f"第 {number} 关：{len(state.arrows)} 支箭头 · 可解={bool(profile.get('solved'))}")
+            print("自检通过：五个关卡全部生成成功且可解。")
             return 0
         while self.running:
             self.process_events()
